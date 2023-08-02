@@ -15,8 +15,12 @@ const cors = require('cors')
 
 // on import le router
 const userRouter = require('./routes/user')
+const postRouter = require('./routes/post')
+
 
 app.use('/users', userRouter)
+app.use('/posts', postRouter)
+
 
 // on déclare le PORT qui va être assigné à notre variable d'environnement ou bien le port 3000 si il ne trouve la variable env
 const PORT = process.env.PORT || 3000
