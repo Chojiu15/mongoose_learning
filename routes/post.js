@@ -34,8 +34,7 @@ postRouter.post("/", async (req, res, next) => {
 
 postRouter.put("/:id", async (req, res, next) => {
   try {
-    const findPost = await Post.findById(req.params.id);
-    const updatePost = await Post.updateOne({ $set: req.body });
+    const findAndUpdatePost = await Post.findByIdAndUpdate()
     const reFindPost = await Post.findById(req.params.id);
     res.json(reFindPost);
   } catch (err) {
