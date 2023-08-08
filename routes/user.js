@@ -1,6 +1,7 @@
 const express = require('express')
 const userRouter = express.Router()
 const User = require('../models/user')
+const upload = require('../middlewares/multer')
 
 
 userRouter.get('/', (req, res, next) => {
@@ -24,15 +25,34 @@ userRouter.get('/:id', (req, res, next) => {
 })
 
 
-userRouter.post('/', (req, res , next) => {
-    User
-    .create(req.body)
-    .then(newUser => res.json(newUser))
-    .catch(err => {
-        console.trace(err)
-        next()
-    })
-})
+// userRouter.post('/', (req, res , next) => {
+//     User
+//     .create(req.body)
+//     .then(newUser => res.json(newUser))
+//     .catch(err => {
+//         console.trace(err)
+//         next()
+//     })
+// })
+
+
+userRouter.post('/', upload.single('image'), async (req, res) => {
+
+    try{
+        const user = await new User({
+            first_name: req.body.first_name,
+            last_name : req.body.last_name,
+            age : req.body.age,
+            image: '/public/images/' + req.file.filename
+          });
+          await user.save()
+          res.send('Image uploaded')
+    }
+    catch(err){
+        console.log(err)
+    } 
+  });
+  
 
 userRouter.put('/:id', async (req, res) => {
     await User.findOne({_id : req.params.id}) // We get the user by ID
@@ -48,6 +68,8 @@ userRouter.delete('/:id', (req, res) => {
     .then(() => res.json('The user has been deleted'))
     .catch(err => console.log(err))
 })
+
+
 
 
 
